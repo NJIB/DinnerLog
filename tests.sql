@@ -1,0 +1,5 @@
+SHOW TABLES;
+
+DESCRIBE Meals;
+
+SELECT * FROM Meals;
