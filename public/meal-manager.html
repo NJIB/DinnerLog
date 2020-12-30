@@ -62,10 +62,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr id="form-row">
-                                <form id="mealinput-form">
+                            <form id="mealinput-form">
+                                <tr id="form-row">
                                     <!-- <td colspan="8" class="add_meal" style="background-color: yellow;"> -->
-                                    <td><input placeholder="Date" id="meal-date" type="text" />
+                                    <td><input placeholder="Date" id="meal-date" type="date" />
                                     <td><input placeholder="Meal" id="meal-description" type="text" />
                                     <td><input class="form-check-input" type="checkbox" id="chicken_check"
                                             value="unchecked"></td>
@@ -83,64 +83,49 @@
                                     <td><input placeholder="Staple" id="staple-description" type="text" /></td>
                                     <!-- <td><button type="submit" class="btn btn-success">Add Meal> </button></td> -->
                                     <!-- </td> -->
-                                </form>
-                            </tr>
-                            <tr id="form-row">
-                                <td><button type="submit" class="btn btn-success">Add Meal</button></td>
-                            </tr>
+                                </tr>
+                                <tr id="form-row">
+                                    <td><button type="submit" class="btn btn-success">Add Meal</button></td>
+                                </tr>
+                            </form>
                         </tbody>
                     </table>
-
-                    <!-- <div class="row add_segment">
-						<div class="col-md-3 col-sm-12">
-							<h4>Add a new segment:</h4>
-						</div>
-						<div class="col-md-9 col-sm-12">
-							<input placeholder="Segment" id="segment-name" type="text" style="width: 200px" />
-							<input placeholder="Deal size" id="segment-deal_size" type="text" style="width: 200px" />
-							<input placeholder="Deal count" id="segment-deal_count" type="text" style="width: 200px" />
-							<button type="submit" class="btn btn-success">Create Segment</button>
-						</div>
-					</div> -->
-
-
-
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-12">
-            <table id="mealsummary-table" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Meal</th>
-                        <th>Protein</th>
-                        <th>Vegetable</th>
-                        <th>Staple</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="form-row">
-                        <form id="mealsummary-form">
-                        </form>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <canvas id="myBubbleChart1" width="200" height="200"></canvas>
+                <table id="mealsummary-table" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Meal</th>
+                            <th>Protein</th>
+                            <th>Vegetable</th>
+                            <th>Staple</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="form-row">
+                            <form id="mealsummary-form">
+                            </form>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <canvas id="myBubbleChart1" width="200" height="200"></canvas>
+                </div>
+            </div>
+
         </div>
 
-    </div>
-
-    <!-- Custom Script -->
-    <script src="js/meal.js" type="text/javascript"></script>
+        <!-- Custom Script -->
+        <script src="js/meal.js" type="text/javascript"></script>
 
 </body>
 

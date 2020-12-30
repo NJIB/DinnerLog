@@ -14,67 +14,25 @@ module.exports = function(sequelize, DataTypes) {
           len: [1, 160],
         },
       },
-      chicken: {
+      protein: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
           len: [1, 160],
         },
       },
-      beef: {
+      vegetable: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
           len: [1, 160],
         },
       },
-      pork: {
+      staple: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
           len: [1, 160],
-        },
-      },
-      veg: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
-        },
-      },
-      other: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
-        },
-      },
-      potato: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
-        },
-      },
-      pasta: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
-        },
-      },
-      rice: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
-        },
-      },
-      other: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          len: [1],
         },
       },
     });
