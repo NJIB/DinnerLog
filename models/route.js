@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
         len: [1, 160],
       },
     },
-    staple: {
+    carb: {
       type: DataTypes.STRING,
       allowNull: true,
       validate: {

@@ -1,11 +1,8 @@
 module.exports = function(sequelize, DataTypes) {
     const Meal = sequelize.define('Meal', {
       date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: true,
-        validate: {
-          len: [1, 160],
-        },
       },
       meal: {
         type: DataTypes.STRING,
@@ -28,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
           len: [1, 160],
         },
       },
-      staple: {
+      carb: {
         type: DataTypes.STRING,
         allowNull: true,
         validate: {

@@ -1,8 +1,9 @@
 $(document).ready(function () {
   // Getting references to the name input and meal container, as well as the table body
+  const mealDate = $('#meal-date');
   const mealInput = $('#meal-description');
   const vegInput = $('#vegetable-description');
-  const stapleInput = $('#staple-description');
+  const carbInput = $('#carb-description');
 
   const mealList = $('tbody');
   const mealTotals = $('tfooter');
@@ -11,6 +12,12 @@ $(document).ready(function () {
   let mealChangeLog = [];
   let mealData = [];
   let proteinData = "";
+  let chickenCount = 0;
+  let beefCount = 0;
+  let porkCount = 0;
+  let fishCount = 0;
+  let vegetarianCount = 0;
+  let otherCount = 0;
 
   // const chart1Area = $('#myBubbleChart1');
   // const chart2Area = $('#myBubbleChart2');
@@ -31,6 +38,8 @@ $(document).ready(function () {
   function handleMealFormSubmit(event) {
     event.preventDefault();
 
+    console.log("mealDate: ", mealDate.val());
+
     // Don't do anything if the name fields hasn't been filled out
     if (!mealInput.val().trim().trim()) {
       return;
@@ -40,26 +49,28 @@ $(document).ready(function () {
 
     for (let i = 0; i < mealChangeLog.length; i++) {
       // console.log("mealChangeLog: ", mealChangeLog);
-      if(proteinData.length == 0) {
-      proteinData = mealChangeLog[i].id.substr(0,(mealChangeLog[i].id.indexOf('_')));
-      console.log("proteinData: ", proteinData);
-      } else {
-        proteinData = proteinData + ", " + mealChangeLog[i].id.substr(0,(mealChangeLog[i].id.indexOf('_')));
+      if (proteinData.length == 0) {
+        proteinData = mealChangeLog[i].id.substr(0, (mealChangeLog[i].id.indexOf('_')));
         console.log("proteinData: ", proteinData);
-      };  
+      } else {
+        proteinData = proteinData + ", " + mealChangeLog[i].id.substr(0, (mealChangeLog[i].id.indexOf('_')));
+        console.log("proteinData: ", proteinData);
+      };
     };
 
     const mealData = {
+      date: mealDate
+        .val(),
       meal: mealInput
-      .val()
-      .trim(),
+        .val()
+        .trim(),
       protein: proteinData,
       vegetable: vegInput
-      .val()
-      .trim(),
-      staple: stapleInput
-      .val()
-      .trim()
+        .val()
+        .trim(),
+      carb: carbInput
+        .val()
+        .trim()
     }
 
     console.log("mealData object: ", mealData)
@@ -71,7 +82,7 @@ $(document).ready(function () {
   // A function for creating an meal. Calls getmeals upon completion
   function upsertmeal(mealData) {
     $.post('/api/meals', mealData)
-      // .then(getmeals);
+    // .then(getmeals);
   }
 
   // Function for creating a new list row for meals
@@ -85,16 +96,14 @@ $(document).ready(function () {
     newTr.append('<td>' + mealData.meal + '</td>');
     newTr.append('<td>' + mealData.protein + '</td>');
     newTr.append('<td>' + mealData.vegetable + '</td>');
-    newTr.append('<td>' + mealData.staple + '</td>');
+    newTr.append('<td>' + mealData.carb + '</td>');
 
     // newTr.append('<td> <button class="btn btn-success"><a style=\'cursor:pointer;color:white;\' href=\'/submeal?meal_id=' + mealData.id + '\' /a> >> </button></td>');
 
     // newTr.append('<td><a style=\'cursor:pointer;color:green;font-size:24px\' href=\'/submeal?meal_id=' + mealData.id + '\'>...</a></td>');
     newTr.append('<td><a style=\'cursor:pointer;color:red\' class=\'delete-meal\'>X</a></td>');
 
-    console.log("mealData: ", mealData);
-
-    buildChartObject(mealData);
+    // buildChartObject(mealData);
 
     return newTr;
   }
@@ -132,15 +141,54 @@ $(document).ready(function () {
       const rowsToAdd = [];
 
       for (let i = 0; i < data.length; i++) {
+
+        console.log("data[i].protein: ", data[i].protein);
+        //Count proteins
+        switch (data[i].protein) {
+          case "chicken":
+            chickenCount++;
+            break;
+          case "beef":
+            beefCount++;
+            break;
+          case "pork":
+            porkCount++;
+            break;
+          case "fish":
+            fishCount++;
+            break;
+          case "vegetarian":
+            vegetarianCount++;
+            break;
+          case "other":
+            otherCount++;
+            break;
+        }
+        //Build table rows
         rowsToAdd.push(createmealRow(data[i], i));
         if ((i + 1) == data.length) {
           rowsToAdd.push(data[i]);
         }
       }
+      console.log("chickenCount: ", chickenCount);
+      console.log("beefCount: ", beefCount);
+      console.log("porkCount: ", porkCount);
+      console.log("fishCount: ", fishCount);
+      console.log("vegetarianCount: ", chickenCount);
+      console.log("otherCount: ", otherCount);
+
+      chart1Data.push({ x: "chicken", y: chickenCount });
+      chart1Data.push({ x: beefCount, y: "beef" });
+      chart1Data.push({ x: porkCount, y: "pork" });
+      chart1Data.push({ x: fishCount, y: "fish" });
+      chart1Data.push({ x: vegetarianCount, y: "vegetarian" });
+      chart1Data.push({ x: otherCount, y: "other" });
 
       console.log("rowsToAdd: ", rowsToAdd);
 
       rendermealList(rowsToAdd);
+      renderChart1(chart1Data);
+
       mealInput.val('');
     });
 
@@ -163,47 +211,62 @@ $(document).ready(function () {
   }
 
   // This populates the object for the Revenue Bubble Chart(s)
-  function buildChartObject(mealData) {
-
-    chart1Data.push({
-      x: mealData.deal_size,
-      y: mealData.deal_count,
-      r: (mealData.sgmt_rev / 100)
-    });
-
-    renderChart1(chart1Data);
-  }
+  // function buildChartObject(mealData) {
+  //   renderChart1(chart1Data);
+  // }
 
   // This creates the display object for the Revenue Bubble Chart(s)
   function renderChart1(chartData) {
-    console.log("chart1 data: ", chartData);
+    console.log("chartData: ", chartData);
     var ctx = $('#myBubbleChart1');
 
     var myBubbleChart = new Chart(ctx, {
-      type: 'bubble',
+      type: 'horizontalBar',
+      // type: 'bar',
       data: {
-        "datasets": [{
-          label: "meal Revenue - This Year",
-          data: chartData,
-          backgroundColor:
-            'red'
-        }]
+        labels: ["Chicken", "Beef", "Pork", "Fish", "Vegetarian", "Other"],
+        datasets: [
+          {
+            label: "Protein Count",
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1,
+            data: [chickenCount, beefCount, porkCount, fishCount, vegetarianCount, otherCount],
+          }
+        ]
       },
       options: {
+        borderWidth: 2,
         scales: {
           xAxes: [{
+            stacked: false,
             scaleLabel: {
               display: true,
-              labelString: 'Deal Size ($)',
+              labelString: 'Occurrences',
             },
             ticks: {
               beginAtZero: true
-            }
+            },
           }],
           yAxes: [{
+            stacked: false,
             scaleLabel: {
               display: true,
-              labelString: 'Deal Count (#)',
+              labelString: 'Protein',
             },
             ticks: {
               beginAtZero: true

@@ -37,13 +37,13 @@ module.exports = function(app) {
   app.post('/api/meals', async (req, res) => {
     // Create an Segment with the data available to us in req.body
     console.log("req.body: ", req.body);
-    const {date, meal, protein, vegetable, staple} = req.body;
+    const {date, meal, protein, vegetable, carb} = req.body;
 
     // const sgmt_rev = (deal_size * deal_count);
     // console.log("sgmt_rev: ", sgmt_rev);
 
     try {
-      const result = await db.Meal.create({date, meal, protein, vegetable, staple});
+      const result = await db.Meal.create({date, meal, protein, vegetable, carb});
       // const result = await db.Segment.create({name, deal_size, deal_count});
       res.json({created: result.dataValues});
     } catch (error) {
@@ -74,12 +74,12 @@ module.exports = function(app) {
     // Add code here to update a segment using the values in req.body, where the id is equal to
     // req.body.id and return the result to the user using res.json
     // const {id, name} = req.body;
-    const {date, meal, protein, vegetable, staple} = req.body;
+    const {date, meal, protein, vegetable, carb} = req.body;
     console.log("name: ", name);
 
     try {
       const result = await db.Meal.update(
-          {date, meal, protein, vegetable, staple},
+          {date, meal, protein, vegetable, carb},
           {where: {id}},
       );
       const affectedRowCount = result[0];
