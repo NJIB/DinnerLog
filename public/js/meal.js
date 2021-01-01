@@ -5,9 +5,11 @@ $(document).ready(function () {
   const vegInput = $('#vegetable-description');
   const carbInput = $('#carb-description');
 
-  const mealList = $('tbody');
+  // const mealList = $('tbody');
+  const mealList = $("#mealsummary-table");
   const mealTotals = $('tfooter');
-  const mealContainer = $('.meal-container');
+  // const mealContainer = $('.meal-container');
+  const mealContainer = $('.mealsummary-container');
   let mealRevTotal = 0;
   let mealChangeLog = [];
   let mealData = [];
@@ -28,7 +30,6 @@ $(document).ready(function () {
   // an meal
   $(document).on('submit', '#mealinput-form', handleMealFormSubmit);
   $(document).on('click', '.delete-meal', handleDeleteButtonPress);
-  $(document).on('click', '.update', handleUpdateButtonPress);
   $(document).on('click', '.form-check-input', handleCheckboxClick);
 
   // Getting the initial list of meals
@@ -73,16 +74,17 @@ $(document).ready(function () {
         .trim()
     }
 
-    console.log("mealData object: ", mealData)
+    // console.log("mealData object: ", mealData)
 
     upsertmeal(mealData);
 
+    window.location.reload();
   }
 
   // A function for creating an meal. Calls getmeals upon completion
   function upsertmeal(mealData) {
     $.post('/api/meals', mealData)
-    // .then(getmeals);
+    .then(getmeals);
   }
 
   // Function for creating a new list row for meals
@@ -135,13 +137,9 @@ $(document).ready(function () {
     $.get('/api/meals', function (data) {
 
       console.log('data: ', data);
-
-      // mealRevTotal = 0;
-      // nextyearSgmtRevTotal = 0;
       const rowsToAdd = [];
 
       for (let i = 0; i < data.length; i++) {
-
         console.log("data[i].protein: ", data[i].protein);
         //Count proteins
         switch (data[i].protein) {
@@ -196,13 +194,15 @@ $(document).ready(function () {
 
   // A function for rendering the list of meals to the page
   function rendermealList(rows) {
-    // mealList.children().not(':last').remove();
-    // mealContainer.children('.alert').remove();
+    mealList.children().not(':last').remove();
+    mealContainer.children('.alert').remove();
     if (rows.length) {
+
       // mealList.prepend(rows);
-      $("#mealsummary-table")
-        // .find('tbody')
-        .find('thead')
+
+      mealList
+        .find('tbody')
+        // .find('thead')
         .append(rows);
     }
     //   else {
@@ -297,69 +297,10 @@ $(document).ready(function () {
       url: '/api/meals/' + id,
     })
       .then(getmeals);
+
+      window.location.reload();
+
   }
-
-  function handleUpdateButtonPress() {
-
-    const listItemData = $(this).parent('td').parent('tr').data('meal');
-    // console.log("listItemData: ", listItemData);
-
-    const id = listItemData.id;
-    // console.log("listItemData.id: ", listItemData.id);
-
-    let nextyearDealsize = 0;
-    let nextyearDealcount = 0;
-
-    const dealsizeyoychangeInput = $('#deal_size_yoy' + listItemData.id);
-    const dealcountyoychangeInput = $('#deal_count_yoy' + listItemData.id);
-
-    // console.log('dealsizeyoychangeInput: ', dealsizeyoychangeInput.val());
-    if (dealsizeyoychangeInput === '') {
-      nextyearDealsize = listItemData.deal_size;
-      // console.log("nextyearDealsize: ", nextyearDealsize);
-    } else {
-      nextyearDealsize = (listItemData.deal_size * (1 + (dealsizeyoychangeInput.val() / 100)));
-      // console.log("nextyearDealsize: ", nextyearDealsize);
-    }
-
-    // console.log('dealcountyoychangeInput: ', dealcountyoychangeInput.val());
-    if (dealcountyoychangeInput === '') {
-      nextyearDealcount = listItemData.deal_count;
-      // console.log("nextyearDealcount: ", nextyearDealcount);
-    } else {
-      nextyearDealcount = (listItemData.deal_count * (1 + (dealcountyoychangeInput.val() / 100)));
-      // console.log("nextyearDealcount: ", nextyearDealcount);
-    }
-
-    const nextyearSgmtrev = (nextyearDealsize * nextyearDealcount);
-    // console.log("nextyearSgmtrev: ", nextyearSgmtrev);
-
-
-    const mealData = {
-      id: listItemData.id,
-      name: listItemData.name,
-      deal_size: listItemData.deal_size,
-      deal_count: listItemData.deal_count,
-      deal_size_yoy: dealsizeyoychangeInput.val() * 1,
-      deal_count_yoy: dealcountyoychangeInput.val() * 1,
-      next_year_deal_size: nextyearDealsize,
-      next_year_deal_count: nextyearDealcount,
-      next_year_sgmt_rev: nextyearSgmtrev
-    }
-
-    console.log("mealData object: ", mealData)
-
-
-    $.ajax({
-      method: 'PUT',
-      url: '/api/meals',
-      data: mealData,
-    })
-      .then(getmeals);
-  }
-
-
-
 
   function handleCheckboxClick(e) {
 
