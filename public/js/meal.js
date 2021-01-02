@@ -78,7 +78,7 @@ $(document).ready(function () {
 
     upsertmeal(mealData);
 
-    window.location.reload();
+    location.reload();
   }
 
   // A function for creating an meal. Calls getmeals upon completion
@@ -137,7 +137,17 @@ $(document).ready(function () {
     $.get('/api/meals', function (data) {
 
       console.log('data: ', data);
+      let mealSort = data;
+      console.log('mealSort: ', mealSort);
+
       const rowsToAdd = [];
+
+      // for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < mealSort.length; i++) {
+          mealSort.sort( compare );
+      }
+
+      console.log('mealSort (sorted): ', mealSort);
 
       for (let i = 0; i < data.length; i++) {
         console.log("data[i].protein: ", data[i].protein);
@@ -197,12 +207,9 @@ $(document).ready(function () {
     mealList.children().not(':last').remove();
     mealContainer.children('.alert').remove();
     if (rows.length) {
-
-      // mealList.prepend(rows);
-
       mealList
-        .find('tbody')
-        // .find('thead')
+      // .find('thead')
+      // .find('tbody')
         .append(rows);
     }
     //   else {
@@ -259,7 +266,9 @@ $(document).ready(function () {
               labelString: 'Occurrences',
             },
             ticks: {
-              beginAtZero: true
+              beginAtZero: true,
+                min: 0,
+                stepSize: 1
             },
           }],
           yAxes: [{
@@ -298,7 +307,8 @@ $(document).ready(function () {
     })
       .then(getmeals);
 
-      window.location.reload();
+      // window.location.reload();
+      location.reload();
 
   }
 
@@ -327,5 +337,15 @@ $(document).ready(function () {
     mealChangeLog.push(change_data);
     console.log("mealChangeLog: ", mealChangeLog);
   };
+
+  function compare( a, b ) {
+    if ( a.date < b.date ){
+      return -1;
+    }
+    if ( a.date > b.date ){
+      return 1;
+    }
+    return 0;
+  }
 
 });
